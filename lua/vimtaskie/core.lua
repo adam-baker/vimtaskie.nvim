@@ -55,6 +55,7 @@ function M.get_tasks()
 		local row = cursor:fetch({}, "a")
 		while row do
 			table.insert(tasks, row)
+			row = cursor:fetch({}, "a")
 		end
 		cursor:close()
 	end
