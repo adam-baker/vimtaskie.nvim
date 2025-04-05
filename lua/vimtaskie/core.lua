@@ -109,7 +109,7 @@ function M.open_task_panel()
 	local total_lines = vim.o.lines - vim.o.cmdheight
 	local panel_width = math .. floor(total_cols * 0.2)
 
-	local buf = vim.api.nvim_create_buf(fale, true)
+	local buf = vim.api.nvim_create_buf(false, true)
 	if not buf then
 		vim.notify("Failed to create buffer", vim.log.levels.ERROR)
 		return
@@ -128,7 +128,7 @@ function M.open_task_panel()
 	local tasks = M.get_tasks()
 	local lines = {}
 	for _, task in ipairs(tasks) do
-		table.insert(lines, string.format("%s [%s] %s", task.timestamp, task.status, task, title))
+		table.insert(lines, string.format("%s [%s] %s", task.timestamp, task.status, task.title))
 	end
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 end
