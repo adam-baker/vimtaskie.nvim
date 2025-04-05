@@ -140,7 +140,7 @@ function M.open_comments(task_id)
 		noremap = true,
 		silent = true,
 		callback = function()
-			require("vimtaskie").save_comment(task_id, buf)
+			require("vimtaskie.core").save_comment(task_id, buf)
 		end,
 		desc = "Save comment",
 	})
