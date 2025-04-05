@@ -24,7 +24,7 @@ function M.init_db()
       description TEXT,
       priority INTEGER,
       status TEXT,
-      related_task_id INTEGER,
+      related_task_id INTEGER
     );
   ]]
 	local create_comments_table = [[
