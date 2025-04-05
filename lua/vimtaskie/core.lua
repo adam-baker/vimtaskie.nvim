@@ -104,36 +104,6 @@ function M.add_task()
 	end
 end
 
--- open a status panel for the task
-function M.open_task_panel()
-	local total_cols = vim.o.columns
-	local total_lines = vim.o.lines - vim.o.cmdheight
-	local panel_width = math.floor(total_cols * 0.2)
-
-	local buf = vim.api.nvim_create_buf(false, true)
-	if not buf then
-		vim.notify("Failed to create buffer", vim.log.levels.ERROR)
-		return
-	end
-
-	vim.api.nvim_open_win(buf, true, {
-		relative = "editor",
-		width = panel_width,
-		height = total_lines,
-		col = total_cols - panel_width,
-		row = 0,
-		style = "minimal",
-		border = "rounded",
-	})
-
-	local tasks = M.get_tasks()
-	local lines = {}
-	for _, task in ipairs(tasks) do
-		table.insert(lines, string.format("%s [%s] %s", task.timestamp, task.status, task.title))
-	end
-	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-end
-
 -- change the status of a task
 -- @param task_id integer
 -- @param new_status string
@@ -145,35 +115,6 @@ function M.change_task_status(task_id, new_status)
 	else
 		vim.notify("Task status updated successfully", vim.log.levels.INFO)
 	end
-end
-
--- open a comment editor for a task
--- @param task_id integer
-function M.open_comment_editor(task_id)
-	local width = math.floor(vim.o.columns * 0.5)
-	local height = math.floor(vim.o.lines * 0.5)
-	local row = math.floor((vim.o.lines - height) / 2)
-	local col = math.floor((vim.o.columns - width) / 2)
-
-	local buf = vim.api.nvim_create_buf(false, true)
-	vim.api.nvim_open_win(buf, true, {
-		relative = "editor",
-		width = width,
-		height = height,
-		col = col,
-		row = row,
-		style = "minimal",
-		border = "rounded",
-	})
-	vim.api.nvim_buf_set_keymap(buf, "n", "ZZ", "", {
-		noremap = true,
-		silent = true,
-		callback = function()
-			M.save_comment(task_id, buf)
-		end,
-		desc = "Save comment",
-	})
-	vim.notify("Enter your comment. Press ZZ in normal mode to save.")
 end
 
 -- save the comment to the database
@@ -203,9 +144,6 @@ function M.register_commands()
 	vim.api.nvim_create_user_command("TaskieAddTask", function()
 		M.add_task()
 	end, {})
-	vim.api.nvim_create_user_command("TaskieOpenPanel", function()
-		M.open_task_panel()
-	end, {})
 	vim.api.nvim_create_user_command("TaskieChangeStatus", function(opts)
 		local args = vim.split(opts.args, "%s+")
 		if #args < 2 then
@@ -220,14 +158,6 @@ function M.register_commands()
 		end
 		M.change_task_status(task_id, new_status)
 	end, { nargs = "+" })
-	vim.api.nvim_create_user_command("TaskieAddComment", function(opts)
-		local task_id = opts.args
-		if not task_id or task_id == "" then
-			vim.notify("Usage: TaskieAddComment <task_id>", vim.log.levels.WARN)
-			return
-		end
-		M.open_comment_editor(task_id)
-	end, { nargs = 1 })
 end
 
 return M
