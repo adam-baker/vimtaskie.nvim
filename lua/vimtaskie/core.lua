@@ -36,7 +36,13 @@ function M.init_db()
       FOREIGN KEY (task_id) REFERENCES tasks(id)
     );
   ]]
-	conn:execute(create_tasks_table)
+	local rc, err = conn:execute(create_tasks_table)
+	if not rc then
+		vim.notify("Failed to create tasks table: " .. err, vim.log.levels.ERROR)
+	else
+		vim.notify("Tasks table created successfully", vim.log.levels.INFO)
+	end
+
 	conn:execute(create_comments_table)
 end
 
