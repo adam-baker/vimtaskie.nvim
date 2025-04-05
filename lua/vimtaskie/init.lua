@@ -1,5 +1,5 @@
 -- lua/vimtaskie/init.lua
-local core =  require("vimtaske.core")
+local core = require("vimtaskie.core")
 
 local M = {}
 
