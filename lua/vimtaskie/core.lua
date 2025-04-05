@@ -104,36 +104,6 @@ function M.add_task()
 	end
 end
 
--- open a status panel for the task
-function M.open_task_panel()
-	local total_cols = vim.o.columns
-	local total_lines = vim.o.lines - vim.o.cmdheight
-	local panel_width = math.floor(total_cols * 0.2)
-
-	local buf = vim.api.nvim_create_buf(false, true)
-	if not buf then
-		vim.notify("Failed to create buffer", vim.log.levels.ERROR)
-		return
-	end
-
-	vim.api.nvim_open_win(buf, true, {
-		relative = "editor",
-		width = panel_width,
-		height = total_lines,
-		col = total_cols - panel_width,
-		row = 0,
-		style = "minimal",
-		border = "rounded",
-	})
-
-	local tasks = M.get_tasks()
-	local lines = {}
-	for _, task in ipairs(tasks) do
-		table.insert(lines, string.format("%s [%s] %s", task.timestamp, task.status, task.title))
-	end
-	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-end
-
 -- change the status of a task
 -- @param task_id integer
 -- @param new_status string
