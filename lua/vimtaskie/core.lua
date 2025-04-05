@@ -107,7 +107,7 @@ end
 function M.open_task_panel()
 	local total_cols = vim.o.columns
 	local total_lines = vim.o.lines - vim.o.cmdheight
-	local panel_width = math .. floor(total_cols * 0.2)
+	local panel_width = math.floor(total_cols * 0.2)
 
 	local buf = vim.api.nvim_create_buf(false, true)
 	if not buf then
